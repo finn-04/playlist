@@ -5,11 +5,21 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchWindowException
 import base64
+import re
+
+def extract_url (url):
+	# oh hell nah
+	match = re.search (r"(?:v=|\/videos\/|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})", url)
+	if match:
+		return match.group (1)
+	else:
+		return None
 
 # urls
 with open ("songs.txt") as songs:
-	playlist = [song.rstrip () for song in songs]
+	playlist = [song.rstrip () for song in songs if song.strip ()]
 
 print (playlist)
 
@@ -62,14 +72,31 @@ driver = webdriver.Chrome (options = options)
 try:
 	# forever piano !!!
 	while True:
-		for song in playlist:
-			# create HTML
-			html = template % song
-			# for embedding
-			encoded_html = base64.b64encode (html.encode ("utf-8")).decode ()
-			uri = f'data:text/html;base64,{encoded_html}'
-			driver.get (uri)
-			WebDriverWait (driver, 600).until (EC.title_is ("ENDED"))
-			print (f'Brandon is done with {song}')
+		for url in playlist:
+			try:
+				if "shorts" in url:
+					print (f'this one is a short and messes everything up lowkey: {url}')
+					driver.get (url)
+					# longest short in my playlist is 2:29
+					# could probably scrape this but no xx
+					time.sleep (149)
+				else:
+					video = extract_url (url)
+					if not video:
+						print (f'skipping invalid url: {url}')
+						continue
+				# create HTML
+				html = template % video
+				# for embedding
+				encoded_html = base64.b64encode (html.encode ("utf-8")).decode ()
+				uri = f"data:text/html;base64,{encoded_html}"
+				driver.get (uri)
+				WebDriverWait (driver, 600).until (EC.title_is ("ENDED"))
+				print (f'done with {song}')
+			except NoSuchWindowException:
+				print ("window closed unexpectedly")
+				break
+			except Exception as e:
+				print (f'error playing {url}: {e}')
 finally:
 	driver.quit ()
