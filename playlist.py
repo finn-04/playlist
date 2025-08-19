@@ -56,6 +56,6 @@ try:
 					WebDriverWait (driver, 600).until (EC.title_is ("ENDED"))
 					print (f'song is done: {url}')
 			except Exception as e:
-				print (f'error playing {url}: e')
+				print (f'error playing {url}: {e}')
 finally:
 	driver.quit ()
