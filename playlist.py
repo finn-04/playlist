@@ -2,12 +2,13 @@
 
 # imports to open songs in browser
 import time
+# youtube lowkey is onto me . fuck
+import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 
 # urls
 with open ("songs.txt") as songs:
@@ -16,12 +17,13 @@ with open ("songs.txt") as songs:
 print (playlist)
 
 # Selenium webdriver -- open-source framework for controlling web interactions
-options = Options ()
+options = uc.ChromeOptions ()
 # shut up "Chrome is being controlled by automated software"
 # tbh doesn't work
 options.add_argument ("--disable-infobars")
 options.add_argument ("--window-size=800,600")
-driver = webdriver.Chrome (options = options)
+
+driver = uc.Chrome (options = options)
 
 try:
 	# forever piano !!!
