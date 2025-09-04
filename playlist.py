@@ -11,8 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # urls
-# with open ("songs.txt") as songs:
-with open ("short_test.txt") as songs:
+with open ("songs.txt") as songs:
+# with open ("short_test.txt") as songs:
 	playlist = [song.rstrip () for song in songs if song.strip ()]
 
 print (playlist)
@@ -56,16 +56,12 @@ try:
 							current_time = driver.execute_script ("return document.querySelector ('video')?.currentTime")
 							# for some reason my shorts pause immediately
 							paused = driver.execute_script ("return document.querySelector ('video')?.paused")
-							# ended = driver.execute_script ("return document.querySelector ('video')?.ended")
-							# if ended:
 							if current_time is not None:
 								if float (current_time) < float (last_time) - 1:
 									print ("navigating away to stop short from looping")
 									driver.get ("about:blank")
 									time.sleep (1)
 									loop_detected = True
-									# print ("short has ended once -- stopping loop")
-									# driver.execute_script ("document.querySelector ('video')?.pause ()")
 									# go to next song
 									break
 								# if this doesn't work i don't even know anymore
