@@ -28,6 +28,7 @@ driver = uc.Chrome (options = options)
 try:
 	# forever piano !!!
 	while True:
+		# each piano song
 		for url in playlist:
 			try:
 				if "shorts" in url:
@@ -55,7 +56,18 @@ try:
 						print ("clicked play to start video with sound")
 					except Exception as e:
 						print (f'could not click play button: {e}')
-					WebDriverWait (driver, 600).until (EC.title_is ("ENDED"))
+					wait_time = 0
+					max_wait = 600
+					while wait_time < max_wait:
+						try:
+							ended = driver.execute_script ("return document.querySelector ('video')?.ended")
+							if ended:
+								break
+						except Exception as e:
+							print ("error checking if video ended: {e}")
+						time.sleep (1)
+						wait_time += 1
+					# WebDriverWait (driver, 600).until (EC.title_is ("ENDED"))
 					print (f'song is done: {url}')
 			except Exception as e:
 				print (f'error playing {url}: {e}')
