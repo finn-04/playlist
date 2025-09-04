@@ -11,8 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # urls
-# with open ("songs.txt") as songs:
-with open ("short_test.txt") as songs:
+with open ("songs.txt") as songs:
+# with open ("short_test.txt") as songs:
 	playlist = [song.rstrip () for song in songs if song.strip ()]
 
 print (playlist)
