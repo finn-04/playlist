@@ -11,8 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # urls
-with open ("songs.txt") as songs:
-# with open ("short_test.txt") as songs:
+# with open ("songs.txt") as songs:
+with open ("short_test.txt") as songs:
 	playlist = [song.rstrip () for song in songs if song.strip ()]
 
 print (playlist)
@@ -40,7 +40,7 @@ try:
 					try:
 						video = driver.find_element (By.TAG_NAME, "video")
 						driver.execute_script ("arguments [0].click ();", video)
-						print ("clicked video to play")
+						print (f"clicked short to play: {driver.title}")
 					except Exception as e:
 						print (f'could not click video: {e}')
 					wait_time = 0
@@ -70,19 +70,19 @@ try:
 								driver.execute_script ("document.querySelector ('video')?.play ()")
 								print ("resumed video")
 						except Exception as e:
-							print (f'error chceking if playing short: {e}')
+							print (f"error chceking if playing short: {e}")
 						time.sleep (1)
 						wait_time += 1
 					print (f'short is done: {url}')
 				else:
-					print (f'playing normal video: {url}')
+					print (f"playing normal video: {url}")
 					driver.get (url)
 					# load page
 					time.sleep (3)
 					try:
 						play_button = WebDriverWait (driver, 10).until (EC.element_to_be_clickable ((By.CSS_SELECTOR, ("button.ytp-large-play-button"))))
 						play_button.click ()
-						print ("clicked play to start video with sound")
+						print (f"clicked video to play: {driver.title}")
 					except Exception as e:
 						print (f'could not click play button: {e}')
 					wait_time = 0
@@ -96,8 +96,8 @@ try:
 							print ("error checking if video ended: {e}")
 						time.sleep (1)
 						wait_time += 1
-					print (f'song is done: {url}')
+					print (f"song is done: {url}")
 			except Exception as e:
-				print (f'error playing {url}: {e}')
+				print (f"error playing {url}: {e}")
 finally:
 	driver.quit ()
