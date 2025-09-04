@@ -45,14 +45,31 @@ try:
 						print (f'could not click video: {e}')
 					wait_time = 0
 					max_wait = 180
+					last_time = 0
+					# shorts are designed to play over and over
+					# video.ended flag briefly becomes true but then a new <video> element is reinserted , resetting this
+					# bruh moment
+					loop_detected = False
 					while wait_time < max_wait:
 						try:
 							# querySelector () method returns first Element within document that matches specified CSS selector
+							current_time = driver.execute_script ("return document.querySelector ('video')?.currentTime")
 							# for some reason my shorts pause immediately
 							paused = driver.execute_script ("return document.querySelector ('video')?.paused")
-							ended = driver.execute_script ("return document.querySelector ('video')?.ended")
-							if ended:
-								break
+							# ended = driver.execute_script ("return document.querySelector ('video')?.ended")
+							# if ended:
+							if current_time is not None:
+								if float (current_time) < float (last_time) - 1:
+									print ("navigating away to stop short from looping")
+									driver.get ("about:blank")
+									time.sleep (1)
+									loop_detected = True
+									# print ("short has ended once -- stopping loop")
+									# driver.execute_script ("document.querySelector ('video')?.pause ()")
+									# go to next song
+									break
+								# if this doesn't work i don't even know anymore
+								last_time = current_time
 							if paused:
 								driver.execute_script ("document.querySelector ('video')?.play ()")
 								print ("resumed video")
