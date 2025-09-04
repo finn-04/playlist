@@ -1,4 +1,4 @@
-playing some unlisted videos i enjoy . over and over again
+playing some unlisted videos that i enjoy . over and over again
 
 
 these are notes for me .
