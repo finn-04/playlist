@@ -11,7 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # urls
-with open ("songs.txt") as songs:
+# with open ("songs.txt") as songs:
+with open ("short_test.txt") as songs:
 	playlist = [song.rstrip () for song in songs if song.strip ()]
 
 print (playlist)
@@ -35,16 +36,31 @@ try:
 					print (f'this one is a short and messes everything up lowkey: {url}')
 					driver.get (url)
 					# load page
-					time.sleep (2)
+					time.sleep (3)
 					try:
 						video = driver.find_element (By.TAG_NAME, "video")
 						driver.execute_script ("arguments [0].click ();", video)
 						print ("clicked video to play")
 					except Exception as e:
 						print (f'could not click video: {e}')
-					# longest short in my playlist is 2:29
-					# could probably scrape this but no xx
-					time.sleep (149)
+					wait_time = 0
+					max_wait = 180
+					while wait_time < max_wait:
+						try:
+							# querySelector () method returns first Element within document that matches specified CSS selector
+							# for some reason my shorts pause immediately
+							paused = driver.execute_script ("return document.querySelector ('video')?.paused")
+							ended = driver.execute_script ("return document.querySelector ('video')?.ended")
+							if ended:
+								break
+							if paused:
+								driver.execute_script ("document.querySelector ('video')?.play ()")
+								print ("resumed video")
+						except Exception as e:
+							print (f'error chceking if playing short: {e}')
+						time.sleep (1)
+						wait_time += 1
+					print (f'short is done: {url}')
 				else:
 					print (f'playing normal video: {url}')
 					driver.get (url)
@@ -67,7 +83,6 @@ try:
 							print ("error checking if video ended: {e}")
 						time.sleep (1)
 						wait_time += 1
-					# WebDriverWait (driver, 600).until (EC.title_is ("ENDED"))
 					print (f'song is done: {url}')
 			except Exception as e:
 				print (f'error playing {url}: {e}')
