@@ -73,7 +73,7 @@ try:
 							print (f"error chceking if playing short: {e}")
 						time.sleep (1)
 						wait_time += 1
-					print (f'short is done: {url}')
+					print (f'short is done')
 				else:
 					print (f"playing normal video: {url}")
 					driver.get (url)
@@ -96,8 +96,9 @@ try:
 							print ("error checking if video ended: {e}")
 						time.sleep (1)
 						wait_time += 1
-					print (f"song is done: {url}")
+					print (f"song is done")
 			except Exception as e:
 				print (f"error playing {url}: {e}")
+			print ()
 finally:
 	driver.quit ()
